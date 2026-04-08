@@ -1,20 +1,26 @@
-import { useState } from "react";
-import "./App.css";
+import React, { useMemo, useState } from "react";
+import "./TicTacToe.css";
 
-export default function App() {
-    const [board, setBoard] = useState(Array(9).fill(null));
+export default function TicTacToeApp() {
+    const [board, setBoard] = useState(() => Array(9).fill(null));
     const [isXNext, setIsXNext] = useState(true);
 
+    const winner = useMemo(() => calculateWinner(board), [board]);
+    const isDraw = useMemo(
+        () => !winner && board.every((cell) => cell !== null),
+        [board, winner]
+    );
+
     function handleClick(index) {
-        if (board[index] || calculateWinner(board)) {
-            return;
-        }
+        if (board[index] !== null || winner) return;
 
-        const nextBoard = [...board];
-        nextBoard[index] = isXNext ? "X" : "O";
+        setBoard((prevBoard) => {
+            const nextBoard = [...prevBoard];
+            nextBoard[index] = isXNext ? "X" : "O";
+            return nextBoard;
+        });
 
-        setBoard(nextBoard);
-        setIsXNext(!isXNext);
+        setIsXNext((prev) => !prev);
     }
 
     function resetGame() {
@@ -22,41 +28,47 @@ export default function App() {
         setIsXNext(true);
     }
 
-    const winner = calculateWinner(board);
-    const isDraw = !winner && board.every((cell) => cell !== null);
-
-    let status;
-    if (winner) {
-        status = `Winner: ${winner}`;
-    } else if (isDraw) {
-        status = "It's a draw!";
-    } else {
-        status = `Next player: ${isXNext ? "X" : "O"}`;
-    }
+    let status = `Next player: ${isXNext ? "X" : "O"}`;
+    if (winner) status = `Winner: ${winner}`;
+    if (isDraw) status = "It's a draw!";
 
     return (
-        <div className="app">
-            <h1>Tic-Tac-Toe</h1>
-            <p className="subtitle">A beginner React game</p>
+        <main className="app-shell">
+        <section className="app-card" aria-label="Tic-Tac-Toe game">
+    <h1 className="app-title">Tic-Tac-Toe</h1>
+        <p className="subtitle">A simple React game for beginners</p>
 
-    <h2>{status}</h2>
+                                                        <div
+        className="status"
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
+        >
+        {status}
+        </div>
 
-    <div className="board">
+        <div className="board" role="grid" aria-label="Tic-Tac-Toe board">
         {board.map((value, index) => (
                 <button
                     key={index}
+            type="button"
             className="square"
             onClick={() => handleClick(index)}
+    aria-label={`Cell ${index + 1}${value ? `, ${value}` : ", empty"}`}
+    disabled={value !== null || Boolean(winner)}
 >
+    <span className={`mark ${value === "X" ? "mark-x" : value === "O" ? "mark-o" : ""}`}>
     {value}
+    </span>
     </button>
 ))}
     </div>
 
-    <button className="restart" onClick={resetGame}>
+    <button type="button" className="restart" onClick={resetGame}>
         Restart Game
     </button>
-    </div>
+    </section>
+    </main>
 );
 }
 
@@ -72,9 +84,7 @@ function calculateWinner(board) {
         [2, 4, 6],
     ];
 
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-
+    for (const [a, b, c] of lines) {
         if (board[a] && board[a] === board[b] && board[a] === board[c]) {
             return board[a];
         }
