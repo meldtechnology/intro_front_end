@@ -1,0 +1,40 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+}
+
+.app {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.board {
+    width: 210px;
+    margin: 20px auto;
+    display: grid;
+    grid-template-columns: repeat(3, 70px);
+    gap: 5px;
+}
+
+.square {
+    width: 70px;
+    height: 70px;
+    font-size: 2rem;
+    font-weight: bold;
+    cursor: pointer;
+    border: 2px solid #333;
+    background: white;
+}
+
+.restart {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+}
