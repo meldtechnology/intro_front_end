@@ -16,8 +16,8 @@ function App() {
           <img src={viteLogo} className="vite" alt="Vite logo" />
         </div>
         <div>
-          <h1>Sarah has toothpick leg</h1>
-            <h2>Welcome Zaza to React + Vite</h2>
+          <h1>Zaza's Laser site</h1>
+            <h2>Welcome to React + Vite by zaza</h2>
             <h3>The fun is just starting</h3>
           <p>
             Edit <code>src/App.tsx</code> and save to test <code>HMR</code>
